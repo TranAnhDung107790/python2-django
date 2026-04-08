@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Đơn hàng của tôi | AD Sneaker{% endblock %}
+
+{% block content %}
+<style>
+  .my-orders-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 15px;
+  }
+  .order-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+  }
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .order-header-left {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .order-status {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+  .status-shipped { color: #007bff; }
+  .status-placed { color: #f39c12; }
+  .status-done { color: #28a745; }
+  .status-canceled { color: #dc3545; }
+  .order-items {
+    padding: 24px;
+  }
+  .order-item-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .order-item-row:last-child {
+    margin-bottom: 0;
+  }
+  .order-item-image {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border: 1px solid #f0f0f0;
+  }
+  .order-item-details {
+    flex: 1;
+  }
+  .order-item-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+    color: #333;
+    text-transform: capitalize;
+  }
+  .order-item-meta {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  .order-item-price {
+    font-weight: 600;
+    color: #111;
+  }
+  .order-footer {
+    padding: 16px 24px;
+    background: #fff;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .order-total-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .order-total-label {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  .order-total-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #c61d22;
+  }
+  .order-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .btn-custom {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  .btn-primary-custom {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+  }
+  .btn-primary-custom:hover {
+    background: #333;
+    color: #fff;
+  }
+  .btn-outline-custom {
+    background: transparent;
+    color: #111;
+    border: 1px solid #ddd;
+  }
+  .btn-outline-custom:hover {
+    background: #f8f9fa;
+    border-color: #bbb;
+    color: #000;
+  }
+  .last-border-none:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  @media (max-width: 576px) {
+    .order-footer {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+    }
+    .order-total-section {
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+    .order-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    .order-actions .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  /* Timeline Styles */
+  .order-timeline {
+    padding: 24px 24px 16px;
+    background: #fafafc;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .timeline-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .timeline-steps::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 40px;
+    right: 40px;
+    height: 3px;
+    background: #e9ecef;
+    z-index: 1;
+  }
+  .timeline-step {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    width: 80px;
+  }
+  .timeline-icon {
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border: 3px solid #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    color: #adb5bd;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+  }
+  .timeline-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 600;
+  }
+  
+  /* Active / Completed state */
+  .timeline-step.completed .timeline-icon,
+  .timeline-step.active .timeline-icon {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+  }
+  .timeline-step.completed .timeline-label,
+  .timeline-step.active .timeline-label {
+    color: #111;
+  }
+  /* Progress Bar Overlays */
+  .timeline-step.completed::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 40px; /* Start from center of this icon */
+    width: calc(100% + 40px); /* Go to next icon */
+    height: 3px;
+    background: #111;
+    z-index: -1;
+  }
+  .timeline-step:last-child::after {
+    display: none;
+  }
+  .timeline-step.canceled .timeline-icon {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+  .timeline-step.canceled .timeline-label {
+    color: #dc3545;
+  }
+</style>
+
+<div class="my-orders-container">
+  <div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Đơn hàng của tôi</h1>
+    <p class="text-muted">Quản lý và theo dõi trạng thái đơn hàng của bạn.</p>
+  </div>
+
+  {% if orders %}
+    {% for o in orders %}
+      <div class="order-card">
+        <div class="order-header">
+          <div class="order-header-left">
+            <span class="fw-bold text-dark"><i class="fa-solid fa-receipt me-1 text-muted"></i> #{{ o.id }}</span>
+            <span class="text-muted d-none d-sm-inline">|</span>
+            <span class="text-muted"><i class="fa-regular fa-clock me-1"></i> {{ o.created_at|date:"d/m/Y H:i" }}</span>
+          </div>
+          <div class="order-status 
+            {% if o.status == 'PLACED' %}status-placed{% elif o.status == 'SHIPPED' %}status-shipped{% elif o.status == 'DONE' %}status-done{% elif o.status == 'CANCELED' %}status-canceled{% endif %}">
+            <i class="fa-solid 
+              {% if o.status == 'PLACED' %}fa-box
+              {% elif o.status == 'SHIPPED' %}fa-truck-fast
+              {% elif o.status == 'DONE' %}fa-check-circle
+              {% elif o.status == 'CANCELED' %}fa-xmark-circle
+              {% else %}fa-info-circle{% endif %} me-1"></i>
+            {{ o.get_status_display }}
+          </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div class="card-body border-bottom px-4 pt-4 pb-3 bg-light">
+          {% if o.status == 'CANCELED' %}
+            <div class="text-danger text-center fw-bold mb-0">
+              <i class="fa-solid fa-xmark-circle fa-2x mb-2 d-block mx-auto text-danger"></i> 
+              Đơn hàng này đã bị hủy
+            </div>
+          {% else %}
+            <div class="order-timeline">
+              <div class="timeline-steps">
+                <div class="timeline-step {% if o.status in 'PLACED,CONFIRMED,SHIPPED,DONE' %}completed{% endif %} {% if o.status == 'PLACED' %}active{% endif %}">
+                  <div class="timeline-icon"><i class="fa-solid fa-receipt"></i></div>
+                  <div class="timeline-label">Đã đặt</div>
+                </div>
+                <div class="timeline-step {% if o.status in 'CONFIRMED,SHIPPED,DONE' %}completed{% endif %} {% if o.status == 'CONFIRMED' %}active{% endif %}">
+                  <div class="timeline-icon"><i class="fa-solid fa-check"></i></div>
+                  <div class="timeline-label">Xác nhận</div>
+                </div>
+                <div class="timeline-step {% if o.status in 'SHIPPED,DONE' %}completed{% endif %} {% if o.status == 'SHIPPED' %}active{% endif %}">
+                  <div class="timeline-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                  <div class="timeline-label">Đang giao</div>
+                </div>
+                <div class="timeline-step {% if o.status == 'DONE' %}completed active{% endif %}">
+                  <div class="timeline-icon"><i class="fa-solid fa-box-open"></i></div>
+                  <div class="timeline-label">Hoàn tất</div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="order-items">
+          {% for item in o.items.all %}
+            <div class="order-item-row border-bottom pb-3 mb-3 last-border-none">
+              {% if item.product.images.first %}
+                <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="order-item-image">
+              {% else %}
+                <div class="order-item-image d-flex align-items-center justify-content-center text-muted">Ảnh</div>
+              {% endif %}
+              
+              <div class="order-item-details d-flex justify-content-between flex-wrap gap-2">
+                <div>
+                  <div class="order-item-title">{{ item.product.name }}</div>
+                  <div class="order-item-meta mb-2">Cỡ (Size): {{ item.size|default:"N/A" }} &nbsp;|&nbsp; Số lượng: {{ item.quantity }}</div>
+                </div>
+                <div class="order-item-price text-end">
+                  {{ item.price|vnd }} đ
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="order-footer">
+          <div class="order-total-section">
+            <div class="mb-2 d-flex gap-2">
+              <span class="badge bg-light text-dark fw-normal border"><i class="fa-solid fa-money-bill-wave me-1"></i> {{ o.get_payment_method_display }}</span>
+              <span class="badge {% if o.is_paid %}bg-success-subtle text-success border border-success-subtle{% else %}bg-warning-subtle text-warning border border-warning-subtle{% endif %} fw-normal">
+                 {% if o.is_paid %}Đã thanh toán{% else %}Chưa thanh toán{% endif %}
+              </span>
+            </div>
+            <div>
+              <span class="order-total-label">Thành tiền:</span>
+              <span class="order-total-price">{{ o.total|vnd }} đ</span>
+            </div>
+          </div>
+          <div class="order-actions">
+            {% if not o.is_paid and o.status != 'CANCELED' and o.status != 'DONE' and o.status != 'SHIPPED' %}
+              <form method="post" action="{% url 'orders:order_cancel' o.id %}" onsubmit="return confirm('Bạn có chắc muốn hủy đơn #{{ o.id }}?');" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-custom btn-outline-danger w-100">Hủy đơn</button>
+              </form>
+            {% endif %}
+            <a href="{% url 'orders:success' o.id %}" class="btn btn-custom btn-outline-custom">Chi tiết</a>
+            <a href="{% url 'orders:track' o.id %}" class="btn btn-custom btn-primary-custom">Theo dõi</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="text-center py-5 bg-white rounded-3 shadow-sm border border-light mt-4">
+      <div class="mb-3 text-muted opacity-50">
+        <i class="fa-solid fa-box-open fa-4x"></i>
+      </div>
+      <h5 class="fw-bold mb-2">Chưa có đơn hàng nào</h5>
+      <p class="text-muted mb-4">Bạn chưa thực hiện bất kỳ giao dịch mua sắm nào.</p>
+      <a href="{% url 'catalog:home' %}" class="btn btn-dark px-4 py-2 rounded-pill"><i class="fa-solid fa-cart-arrow-down me-2"></i>Tiếp tục mua sắm</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

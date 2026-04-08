@@ -1,0 +1,620 @@
+﻿{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Trang chủ | AD Sneaker{% endblock %}
+
+{% block content %}
+  <section class="ads-hero mb-4" data-aos="fade-down">
+    <div id="adsHeroCarousel" class="carousel slide ads-hero-carousel" data-bs-ride="carousel" data-bs-interval="3000">
+      <div class="carousel-indicators ads-hero-indicators">
+        <button type="button" data-bs-target="#adsHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#adsHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#adsHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div
+            class="ads-hero__slide d-flex align-items-center"
+            style="background-image:linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 70%, rgba(0, 0, 0, 0) 100%), url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1600&q=80'); background-position: center; min-height: 480px; max-height: 500px;"
+          >
+            <div class="ads-hero__content text-start w-100 ps-md-4">
+              <div class="ads-hero__eyebrow text-white mb-2" style="font-weight: 600; letter-spacing: 2px; font-size: 0.85rem;">NEW ARRIVALS</div>
+              <h2 class="display-4 text-white fw-bold mb-3" style="letter-spacing: -1px; text-transform: uppercase;">Mùa Hè Năng Động</h2>
+              <p class="ads-hero__sub text-white-50" style="max-width: 450px; font-size: 1.05rem !important;">Thở chất đường phố. Nhẹ chuẩn tương lai. Dòng giày thể thao vừa cập bến AD Sneaker.</p>
+              <div class="ads-hero__actions mt-4">
+                <a class="btn btn-light rounded-pill px-4 py-2 fw-bold text-uppercase shadow-sm" href="{% url 'catalog:category' %}" style="letter-spacing: 1px; font-size: 0.85rem;">Khám Phá Ngay</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div
+            class="ads-hero__slide d-flex align-items-center"
+            style="background-image:linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0) 100%), url('https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=1600&q=80'); background-position: center 70%; min-height: 480px; max-height: 500px;"
+          >
+            <div class="ads-hero__content text-start w-100 ps-md-4">
+              <div class="ads-hero__eyebrow text-white mb-2" style="font-weight: 600; letter-spacing: 2px; font-size: 0.85rem;">CLASSIC SERIES</div>
+              <h2 class="display-4 text-white fw-bold mb-3" style="letter-spacing: -1px; text-transform: uppercase;">Biểu Tượng Bất Tử</h2>
+              <p class="ads-hero__sub text-white-50" style="max-width: 450px; font-size: 1.05rem !important;">Những form dáng basic đi cùng năm tháng, không bao giờ lỗi thời.</p>
+              <div class="ads-hero__actions mt-4">
+                <a class="btn btn-light rounded-pill px-4 py-2 fw-bold text-uppercase shadow-sm" href="{% url 'catalog:category_slug' 'giay-nam' %}" style="letter-spacing: 1px; font-size: 0.85rem;">Mua Giày Nam</a>
+                <a class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold text-uppercase ms-3" href="{% url 'catalog:category_slug' 'giay-nu' %}" style="letter-spacing: 1px; font-size: 0.85rem;">Mua Giày Nữ</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <div
+            class="ads-hero__slide d-flex align-items-center"
+            style="background-image:linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 60%, rgba(0, 0, 0, 0) 100%), url('https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1600&q=80'); background-position: center 60%; min-height: 480px; max-height: 500px;"
+          >
+            <div class="ads-hero__content text-start w-100 ps-md-4">
+              <div class="ads-hero__eyebrow text-white mb-2" style="font-weight: 600; letter-spacing: 2px; font-size: 0.85rem;">PERFORMANCE</div>
+              <h2 class="display-4 text-white fw-bold mb-3" style="letter-spacing: -1px; text-transform: uppercase;">Chinh Phục Mọi Lối Đi</h2>
+              <p class="ads-hero__sub text-white-50" style="max-width: 450px; font-size: 1.05rem !important;">Tối ưu độ bám, đệm lót siêu êm. Dành riêng cho lối sống năng động.</p>
+              <div class="ads-hero__actions mt-4">
+                <a class="btn btn-light rounded-pill px-4 py-2 fw-bold text-uppercase shadow-sm" href="{% url 'catalog:site_page' 'gioi-thieu' %}" style="letter-spacing: 1px; font-size: 0.85rem;">Câu Chuyện AD Sneaker</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-control-prev ads-hero-control" type="button" data-bs-target="#adsHeroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next ads-hero-control" type="button" data-bs-target="#adsHeroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="ads-badges mb-4" data-aos="fade-up" data-aos-delay="200">
+    <div class="ads-badge">
+      <div class="ads-badge__icon"><i class="fa-solid fa-truck"></i></div>
+      <div>
+        <div class="ads-badge__title">Miễn phí vận chuyển</div>
+        <div class="ads-badge__sub">Cho đơn hàng từ 800k</div>
+      </div>
+    </div>
+    <div class="ads-badge">
+      <div class="ads-badge__icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div>
+        <div class="ads-badge__title">Bảo hành 6 tháng</div>
+        <div class="ads-badge__sub">15 ngày đổi trả</div>
+      </div>
+    </div>
+    <div class="ads-badge">
+      <div class="ads-badge__icon"><i class="fa-solid fa-credit-card"></i></div>
+      <div>
+        <div class="ads-badge__title">Thanh toán COD</div>
+        <div class="ads-badge__sub">Yên tâm mua sắm</div>
+      </div>
+    </div>
+    <div class="ads-badge">
+      <div class="ads-badge__icon"><i class="fa-solid fa-phone"></i></div>
+      <div>
+        <div class="ads-badge__title">Hotline: 0388724091</div>
+        <div class="ads-badge__sub">Hỗ trợ bạn 24/7</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ads-home-marquee mb-4 ads-surface">
+    <div class="ads-home-marquee__track">
+      <span>NEW DROP MỖI TUẦN</span>
+      <span>FREE SHIP ĐƠN TỪ 800K</span>
+      <span>SNEAKER CHÍNH HÃNG</span>
+      <span>ĐỔI TRẢ 15 NGÀY</span>
+      <span>HOTLINE 24/7</span>
+      <span>NEW DROP MỖI TUẦN</span>
+      <span>FREE SHIP ĐƠN TỪ 800K</span>
+      <span>SNEAKER CHÍNH HÃNG</span>
+    </div>
+  </section>
+
+  <section class="ads-home-split mb-5" data-aos="fade-up">
+    <div class="ads-home-split__story ads-surface">
+      <p class="ads-home-kicker">Streetwear Energy</p>
+      <h2>Đôi giày đúng vibe sẽ đổi cả outfit</h2>
+      <p>
+        AD Sneaker tập trung vào những mẫu mang chất thể thao hiện đại, dễ phối đồ, form đẹp khi lên chân và đủ nổi bật để
+        tạo điểm nhấn cho cả set đồ.
+      </p>
+      <div class="ads-home-story-points">
+        <div>Form chắc chân, đi êm cả ngày</div>
+        <div>Dễ phối quần jeans, short, jogger</div>
+        <div>Drop mới liên tục theo vibe sneaker</div>
+      </div>
+      <div class="ads-home-stats">
+        <div>
+          <strong>3.2k+</strong>
+          <span>Khách đã mua</span>
+        </div>
+        <div>
+          <strong>120+</strong>
+          <span>Mẫu sneaker</span>
+        </div>
+          <div>
+            <strong>24/7</strong>
+            <span>Hỗ trợ nhanh</span>
+          </div>
+        </div>
+      <div class="ads-home-story-note">
+        <strong>Mix nhanh cho mỗi ngày.</strong>
+        <span>Chọn một đôi thật nổi, phần còn lại của outfit sẽ dễ lên form hơn hẳn.</span>
+      </div>
+    </div>
+    <div class="ads-home-split__cta ads-surface">
+      <p class="ads-home-kicker">Editor Picks</p>
+      <h2>Phối nhanh, lên hình đẹp, mang mỗi ngày</h2>
+      <div class="ads-home-picks">
+        {% for p in editor_picks %}
+            <a class="ads-home-pick" href="{% url 'catalog:product_detail' p.id p.slug %}">
+              <span>{{ p.name }}</span>
+              <strong>{{ p.price|vnd }}&nbsp;đ</strong>
+            </a>
+        {% empty %}
+          <div class="text-muted">Chưa có lựa chọn nổi bật.</div>
+        {% endfor %}
+      </div>
+      <a class="btn btn-dark" href="{% url 'catalog:category' %}">Xem toàn bộ sản phẩm</a>
+    </div>
+  </section>
+
+  <section class="mt-4 pt-3" data-aos="fade-up">
+    <div class="d-flex flex-column align-items-center justify-content-center gap-2 mb-4">
+      <div class="ads-home-kicker text-danger fw-bold" style="letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase;">Trending Now</div>
+      <h2 class="h2 fw-bold m-0 text-uppercase">SẢN PHẨM NỔI BẬT</h2>
+    </div>
+    <ul class="nav nav-underline justify-content-center mb-4 ads-home-tabs" id="featured-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#featured-men" type="button">Giày Nam</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#featured-women" type="button">Giày Nữ</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#featured-kids" type="button">Giày Trẻ Em</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="featured-men">
+        <div class="ads-product-rail">
+          {% for p in featured_men %}
+            <div class="ads-product-rail__item">
+              <div class="card h-100 ads-product-card">
+                {% with img=p.images.first %}
+                  {% if img %}
+                    <div class="ads-product-card__media">
+                      <span class="ads-product-card__tag">Hot</span>
+                      <img class="card-img-top" src="{{ img.image.url }}" alt="{{ p.name }}" style="object-fit:cover;height:220px;" />
+                    </div>
+                  {% else %}
+                    <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+                  {% endif %}
+                {% endwith %}
+                <div class="card-body ads-product-card__body">
+                  <div class="ads-product-card__name fw-semibold">{{ p.name }}</div>
+                  <div class="ads-product-card__price text-danger fw-bold">{{ p.price|vnd }} đ</div>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 d-flex gap-2 ads-product-card__footer">
+                  <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' p.id p.slug %}">Xem</a>
+                  {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'catalog:wishlist_toggle' p.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-outline-danger" type="submit">{% if p.id in wishlist_ids %}<i class="fa-solid fa-heart" text-danger style="transform: translateY(1px)"></i>{% else %}<i class="fa-regular fa-heart" style="transform: translateY(1px)"></i>{% endif %}</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">Chưa có sản phẩm.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="featured-women">
+        <div class="ads-product-rail">
+          {% for p in featured_women %}
+            <div class="ads-product-rail__item">
+              <div class="card h-100 ads-product-card">
+                {% with img=p.images.first %}
+                  {% if img %}
+                    <div class="ads-product-card__media">
+                      <span class="ads-product-card__tag">Drop</span>
+                      <img class="card-img-top" src="{{ img.image.url }}" alt="{{ p.name }}" style="object-fit:cover;height:220px;" />
+                    </div>
+                  {% else %}
+                    <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+                  {% endif %}
+                {% endwith %}
+                <div class="card-body ads-product-card__body">
+                  <div class="ads-product-card__name fw-semibold">{{ p.name }}</div>
+                  <div class="ads-product-card__price text-danger fw-bold">{{ p.price|vnd }} đ</div>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 d-flex gap-2 ads-product-card__footer">
+                  <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' p.id p.slug %}">Xem</a>
+                  {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'catalog:wishlist_toggle' p.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-outline-danger" type="submit">{% if p.id in wishlist_ids %}<i class="fa-solid fa-heart" text-danger style="transform: translateY(1px)"></i>{% else %}<i class="fa-regular fa-heart" style="transform: translateY(1px)"></i>{% endif %}</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">Chưa có sản phẩm.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="featured-kids">
+        <div class="ads-product-rail">
+          {% for p in featured_kids %}
+            <div class="ads-product-rail__item">
+              <div class="card h-100 ads-product-card">
+                {% with img=p.images.first %}
+                  {% if img %}
+                    <div class="ads-product-card__media">
+                      <span class="ads-product-card__tag">Fresh</span>
+                      <img class="card-img-top" src="{{ img.image.url }}" alt="{{ p.name }}" style="object-fit:cover;height:220px;" />
+                    </div>
+                  {% else %}
+                    <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+                  {% endif %}
+                {% endwith %}
+                <div class="card-body ads-product-card__body">
+                  <div class="ads-product-card__name fw-semibold">{{ p.name }}</div>
+                  <div class="ads-product-card__price text-danger fw-bold">{{ p.price|vnd }} đ</div>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3 d-flex gap-2 ads-product-card__footer">
+                  <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' p.id p.slug %}">Xem</a>
+                  {% if request.user.is_authenticated %}
+                    <form method="post" action="{% url 'catalog:wishlist_toggle' p.id %}">
+                      {% csrf_token %}
+                      <button class="btn btn-outline-danger" type="submit">{% if p.id in wishlist_ids %}<i class="fa-solid fa-heart" text-danger style="transform: translateY(1px)"></i>{% else %}<i class="fa-regular fa-heart" style="transform: translateY(1px)"></i>{% endif %}</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">Chưa có sản phẩm.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mt-5" data-aos="fade-up">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <p class="ads-home-kicker mb-2">New Drops</p>
+        <h2 class="h3 mb-0">Mẫu mới vừa lên kệ</h2>
+      </div>
+      <a class="btn btn-outline-dark" href="{% url 'catalog:category' %}?sort=desc">Xem thêm</a>
+    </div>
+    <div class="ads-home-grid">
+      {% for p in new_drops %}
+        <div class="ads-home-grid__item">
+          <div class="card h-100 ads-product-card">
+            {% with img=p.images.first %}
+              {% if img %}
+                <div class="ads-product-card__media">
+                  <span class="ads-product-card__tag">New</span>
+                  <img class="card-img-top" src="{{ img.image.url }}" alt="{{ p.name }}" style="object-fit:cover;height:240px;" />
+                </div>
+              {% else %}
+                <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+              {% endif %}
+            {% endwith %}
+            <div class="card-body ads-product-card__body">
+              <div class="ads-product-card__name fw-semibold">{{ p.name }}</div>
+              <div class="ads-product-card__price text-danger fw-bold">{{ p.price|vnd }} đ</div>
+            </div>
+            <div class="card-footer bg-white border-0 pb-3 d-flex gap-2 ads-product-card__footer">
+              <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' p.id p.slug %}">Xem ngay</a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="text-muted">Chưa có sản phẩm mới.</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+    /* Streetwear Gen-Z Hype typography - Chỉ áp dụng cho phần Banner (Hero) */
+    .ads-hero .display-4, .ads-hero__title, .ads-hero__eyebrow {
+      font-family: 'Montserrat', sans-serif !important;
+      letter-spacing: -0.5px;
+    }
+
+    /* Modern clean copy for GenZ - Chỉ áp dụng chữ mô tả và nút bấm trong Banner (Hero) */
+    .ads-hero__sub, .ads-hero .btn {
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    .ads-hero__sub {
+      font-size: 1.15rem !important;
+      font-weight: 500 !important;
+      line-height: 1.6 !important;
+      letter-spacing: 0.3px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    }
+
+    /* Styling for premium Nikesho Collection */
+    .premium-collection-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    
+    @media (max-width: 991px) {
+      .premium-collection-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 575px) {
+      .premium-collection-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .premium-collection-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .premium-collection-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+    }
+
+    .premium-collection-card img {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+      display: block;
+    }
+
+    .premium-collection-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .premium-collection-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 40px 24px 24px 24px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+      color: white;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      z-index: 2;
+    }
+
+    .premium-collection-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin: 0;
+      text-transform: uppercase;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .premium-collection-icon {
+      background: white;
+      color: black;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+    }
+
+    .premium-collection-card:hover .premium-collection-icon {
+      transform: translateX(4px);
+      background: #dc3545; /* Bootstrap danger color for excitement */
+      color: white;
+    }
+  </style>
+
+  <section class="mt-5 pt-4" data-aos="fade-up">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h2 class="h3 fw-bold mb-0 text-uppercase" style="letter-spacing: 1px; border-left: 4px solid #dc3545; padding-left: 12px;">AD SNEAKER COLLECTION</h2>
+      <a href="{% url 'catalog:category' %}" class="text-dark text-decoration-none fw-semibold">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+    
+    <div class="premium-collection-grid">
+      <!-- Collection Item 1 -->
+      <a href="{% url 'catalog:category' %}" class="premium-collection-card">
+        <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_583,c_limit/cb28c551-b85b-479f-8fc3-40ad4e7c9ca4/nike-just-do-it.jpg" alt="Streetwear Collection" />
+        <div class="premium-collection-overlay">
+          <h3 class="premium-collection-title">Streetwear</h3>
+          <div class="premium-collection-icon"><i class="fas fa-chevron-right" style="font-size: 14px;"></i></div>
+        </div>
+      </a>
+      
+      <!-- Collection Item 2 -->
+      <a href="{% url 'catalog:category' %}" class="premium-collection-card">
+        <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_583,c_limit/100ca749-1a94-4f98-bc43-a58e7e9cdbcf/nike-just-do-it.png" alt="Sport Life Collection" />
+        <div class="premium-collection-overlay">
+          <h3 class="premium-collection-title">Sport Life</h3>
+          <div class="premium-collection-icon"><i class="fas fa-chevron-right" style="font-size: 14px;"></i></div>
+        </div>
+      </a>
+
+      <!-- Collection Item 3 -->
+      <a href="{% url 'catalog:category' %}" class="premium-collection-card">
+        <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_583,c_limit/39412611-0af5-4770-8c2e-ef5c23bc6a3d/nike-just-do-it.jpg" alt="Training Collection" />
+        <div class="premium-collection-overlay">
+          <h3 class="premium-collection-title">Training</h3>
+          <div class="premium-collection-icon"><i class="fas fa-chevron-right" style="font-size: 14px;"></i></div>
+        </div>
+      </a>
+
+      <!-- Collection Item 4 -->
+      <a href="{% url 'catalog:category' %}" class="premium-collection-card">
+        <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_583,c_limit/a9767bce-db10-41ff-9eb5-f5daf8bbb3e6/nike-just-do-it.png" alt="Basketball Collection" />
+        <div class="premium-collection-overlay">
+          <h3 class="premium-collection-title">Basketball</h3>
+          <div class="premium-collection-icon"><i class="fas fa-chevron-right" style="font-size: 14px;"></i></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Đánh giá từ khách hàng -->
+  <section class="mt-5 pt-3 mb-5" data-aos="fade-up">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <h2 class="ads-section-title">Khách Hàng Nói Về Shop</h2>
+    </div>
+    
+    <div class="row g-4">
+      <!-- Đánh giá 1 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0" style="background:#f8f9fa; border-radius: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div class="card-body p-4">
+            <div class="d-flex mb-3 align-items-center">
+              <img src="https://ui-avatars.com/api/?name=Nguyen+Anh+Tuan&background=1fa24f&color=fff&size=50" class="rounded-circle me-3" alt="Avatar" width="50" height="50">
+              <div>
+                <div class="fw-bold mb-1">Nguyễn Anh Tuấn</div>
+                <div class="text-warning small" style="letter-spacing: 2px;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0">"Giày trên web nhìn sao thì ở ngoài y chang vậy. Đóng gói rất cẩn thận, hộp không hề bị móp. Giao hàng nội thành chưa tới 2 ngày đã nhận được rồi!"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Đánh giá 2 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0" style="background:#f8f9fa; border-radius: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div class="card-body p-4">
+            <div class="d-flex mb-3 align-items-center">
+              <img src="https://ui-avatars.com/api/?name=Tran+Thu+Ha&background=d63384&color=fff&size=50" class="rounded-circle me-3" alt="Avatar" width="50" height="50">
+              <div>
+                <div class="fw-bold mb-1">Trần Thu Hà</div>
+                <div class="text-warning small" style="letter-spacing: 2px;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0">"Mình mua tặng sinh nhật bạn trai, size chuẩn form. Mang rất êm, bạn nhân viên tư vấn cực kỳ nhiệt tình và dễ thương. Sẽ ủng hộ shop tiếp vào nhịp tết."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Đánh giá 3 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0" style="background:#f8f9fa; border-radius: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div class="card-body p-4">
+            <div class="d-flex mb-3 align-items-center">
+              <img src="https://ui-avatars.com/api/?name=Le+Hoang+Phuc&background=0d6efd&color=fff&size=50" class="rounded-circle me-3" alt="Avatar" width="50" height="50">
+              <div>
+                <div class="fw-bold mb-1">Lê Hoàng Phúc</div>
+                <div class="text-warning small" style="letter-spacing: 2px;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0">"Chất lượng vượt xa mức giá. AD Sneaker thiết kế menu và UI thân thiện với người dùng, checkout thanh toán Momo siêu nhanh mượt mà luôn! Chúc shop mua may bán đắt."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Đánh giá 4 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0" style="background:#f8f9fa; border-radius: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div class="card-body p-4">
+            <div class="d-flex mb-3 align-items-center">
+              <img src="https://ui-avatars.com/api/?name=Pham+Dieu+Linh&background=fd7e14&color=fff&size=50" class="rounded-circle me-3" alt="Avatar" width="50" height="50">
+              <div>
+                <div class="fw-bold mb-1">Phạm Diệu Linh</div>
+                <div class="text-warning small" style="letter-spacing: 2px;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0">"Trước đây mình hay phân vân, nhưng giao diện filter lọc size, lọc giá của shop làm mình chốt đơn rụp rụp. Nhận hàng mở ra đôi AirForce1 bao ghiền ạ."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Đánh giá 5 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0" style="background:#f8f9fa; border-radius: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div class="card-body p-4">
+            <div class="d-flex mb-3 align-items-center">
+              <img src="https://ui-avatars.com/api/?name=Bui+Quang+Huy&background=6f42c1&color=fff&size=50" class="rounded-circle me-3" alt="Avatar" width="50" height="50">
+              <div>
+                <div class="fw-bold mb-1">Bùi Quang Huy</div>
+                <div class="text-warning small" style="letter-spacing: 2px;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0">"Phải nói support 10 điểm không có nhưng. Đặt COD tối thứ 7 mà chủ nhật shop đã giao cho bên vận chuyển. Rất là ấn tượng cách làm việc chuyên nghiệp."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Đánh giá 6 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0" style="background:#f8f9fa; border-radius: 1rem; transition: transform 0.3s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div class="card-body p-4">
+            <div class="d-flex mb-3 align-items-center">
+              <img src="https://ui-avatars.com/api/?name=Vo+Thi+Ngoc&background=20c997&color=fff&size=50" class="rounded-circle me-3" alt="Avatar" width="50" height="50">
+              <div>
+                <div class="fw-bold mb-1">Võ Thị Ngọc</div>
+                <div class="text-warning small" style="letter-spacing: 2px;">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0">"Mẫu mã đa dạng hợp trend, update hàng mới liên tục. Đi làm hay mang đi chơi đều dễ phối đồ. Rất có tâm từ khâu làm web đến khâu bán hàng."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ads-home-closing mt-5 ads-surface" data-aos="zoom-in" data-aos-duration="1000">
+    <div class="ads-home-closing__content">
+      <p class="ads-home-kicker">Join The Movement</p>
+      <h2>Không chỉ là mua giày, mà là chọn đúng năng lượng cho mỗi ngày.</h2>
+      <p>
+        Từ đi học, đi làm đến xuống phố cuối tuần, AD Sneaker muốn mỗi đôi bạn chọn đều vừa đẹp, vừa dễ mang, vừa đúng
+        chất riêng của bạn.
+      </p>
+    </div>
+    <div class="ads-home-closing__actions">
+      <a class="btn btn-dark btn-lg" href="{% url 'catalog:category' %}">Mua ngay</a>
+      <a class="btn btn-outline-dark btn-lg" href="{% url 'catalog:wishlist' %}">Xem wishlist</a>
+    </div>
+  </section>
+{% endblock %}

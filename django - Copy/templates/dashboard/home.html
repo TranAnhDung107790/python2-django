@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3 mb-0">Dashboard</h1>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-dark" href="/admin/">Django Admin</a>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="border rounded p-3">
+        <div class="text-muted small">Sản phẩm</div>
+        <div class="h4 mb-0">{{ product_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="border rounded p-3">
+        <div class="text-muted small">Đơn hàng</div>
+        <div class="h4 mb-0">{{ totals.total_orders|default:0 }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="border rounded p-3">
+        <div class="text-muted small">Doanh thu</div>
+        <div class="h4 mb-0">{{ totals.total_revenue|default:0|floatformat:0 }} đ</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h5 mb-2">Đơn hàng mới</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered border-primary">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Tổng</th>
+          <th>Thanh toán</th>
+          <th>Trạng thái</th>
+          <th>Ngày</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in recent_orders %}
+          <tr>
+            <td>{{ o.id }}</td>
+            <td>{{ o.user.username }}</td>
+            <td class="text-danger fw-bold">{{ o.total|floatformat:0 }} đ</td>
+            <td>{{ o.get_payment_method_display }}</td>
+            <td>{{ o.get_status_display }}</td>
+            <td>{{ o.created_at|date:"d/m/Y H:i" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-muted">Chưa có đơn hàng.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+

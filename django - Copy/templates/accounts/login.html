@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Đăng nhập | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="ads-auth-card ads-surface">
+        <div class="ads-auth-card__head">
+          <p class="ads-auth-card__eyebrow">WELCOME BACK</p>
+          <h1 class="h3 mb-2">Đăng nhập</h1>
+          <p class="text-muted mb-0">Đăng nhập để tiếp tục theo dõi đơn hàng, giỏ hàng và danh sách yêu thích của bạn.</p>
+        </div>
+        <form method="post" class="p-0">
+        {% csrf_token %}
+        <div class="mb-2">
+          <label class="form-label">Email</label>
+          <input class="form-control" type="email" name="email" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mật khẩu</label>
+          <div class="input-group">
+            <input class="form-control border-end-0" type="password" name="password" id="passwordField" required />
+            <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassword('passwordField', 'toggleIcon')" style="background-color: transparent; border-color: #dee2e6;">
+              <i class="fa-regular fa-eye-slash text-muted" id="toggleIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 small">
+          <div class="form-check m-0">
+            <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me" value="true">
+            <label class="form-check-label text-muted" for="rememberMe" style="cursor: pointer;">
+              Ghi nhớ đăng nhập
+            </label>
+          </div>
+          <a href="#" class="text-decoration-none fw-medium text-dark" onclick="window.showAdsToast('info', 'Vui lòng liên hệ Admin để cấp lại mật khẩu!'); return false;">Quên mật khẩu?</a>
+
+        <button class="btn btn-dark w-100 mb-3 py-2 fw-bold" type="submit">Đăng nhập</button>
+
+        <div class="text-center small text-muted">
+          Bạn chưa có tài khoản? <a href="{% url 'accounts:register' %}" class="text-decoration-none fw-bold text-dark ms-1">Đăng ký ngay</a>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      }
+    }
+  </script>
+{% endblock %}

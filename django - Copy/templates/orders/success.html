@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Đặt hàng thành công | AD Sneaker{% endblock %}
+
+{% block content %}
+<style>
+  .success-container {
+    max-width: 680px;
+    margin: 40px auto;
+    font-family: inherit;
+  }
+  .success-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .success-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    background: #e8f5e9;
+    color: #28a745;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 2.5rem;
+    box-shadow: 0 0 0 10px rgba(40, 167, 69, 0.1);
+  }
+  .success-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 8px;
+  }
+  .success-subtitle {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .receipt-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .receipt-header {
+    background: #fafafa;
+    padding: 20px 24px;
+    border-bottom: 1px dashed #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .receipt-body {
+    padding: 24px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+  }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-label { color: #666; }
+  .info-value { font-weight: 600; color: #111; text-align: right; }
+  
+  .receipt-items {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed #e0e0e0;
+  }
+  .r-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .r-item:last-child { margin-bottom: 0; }
+  .r-item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f5f5f5;
+    border: 1px solid #eee;
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
+  .r-item-details { flex: 1; }
+  .r-item-name { font-weight: 600; font-size: 0.95rem; color: #333; margin-bottom: 4px; }
+  .r-item-meta { font-size: 0.85rem; color: #888; }
+  .r-item-price { font-weight: 600; color: #111; }
+
+  .receipt-footer {
+    background: #fafafa;
+    padding: 20px 24px;
+    border-top: 1px dashed #e0e0e0;
+  }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+  }
+  .total-label { font-weight: 600; color: #111; }
+  .total-value { font-size: 1.4rem; font-weight: 800; color: #c61d22; }
+
+  .action-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .action-buttons .btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-width: 160px;
+  }
+</style>
+
+<div class="success-container">
+  <div class="success-header">
+    <div class="success-icon-wrapper">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <h1 class="success-title">Đặt hàng thành công!</h1>
+    <p class="success-subtitle">Cảm ơn <b>{{ order.full_name }}</b> đã mua sắm tại AD Sneaker.<br>Đơn hàng của bạn đang được xử lý và sẽ sớm được giao.</p>
+  </div>
+
+  <div class="receipt-card">
+    <div class="receipt-header">
+      <div>
+        <span class="text-muted small d-block">Mã đơn hàng</span>
+        <strong class="fs-5">#{{ order.id }}</strong>
+      </div>
+      <div class="text-end">
+        <span class="text-muted small d-block">Trạng thái</span>
+        <span class="badge bg-primary text-white">{{ order.get_status_display }}</span>
+      </div>
+    </div>
+
+    <div class="receipt-body">
+      <div class="info-row">
+        <span class="info-label">Phương thức thanh toán:</span>
+        <span class="info-value">
+          {{ order.get_payment_method_display }}
+          {% if order.is_paid %}
+            <span class="badge bg-success-subtle text-success border border-success-subtle ms-1 fw-normal">Đã thanh toán</span>
+          {% else %}
+            <span class="badge bg-warning-subtle text-warning border border-warning-subtle ms-1 fw-normal">Chưa thanh toán</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Điện thoại liên hệ:</span>
+        <span class="info-value">{{ order.phone }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Địa chỉ nhận hàng:</span>
+        <span class="info-value text-break" style="max-width: 60%; text-align: right;">{{ order.address }}, {{ order.ward }}, {{ order.district }}, {{ order.province }}</span>
+      </div>
+
+      <div class="receipt-items">
+        <h6 class="fw-bold mb-3 text-uppercase" style="font-size: 0.85rem; color: #888; letter-spacing: 0.5px;">Sản phẩm đã đặt</h6>
+        {% for item in order.items.all %}
+          <div class="r-item">
+            {% if item.product.images.first %}
+              <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="r-item-img">
+            {% else %}
+              <div class="r-item-img d-flex align-items-center justify-content-center text-muted small bg-light">Ảnh</div>
+            {% endif %}
+            <div class="r-item-details">
+              <div class="r-item-name">{{ item.product.name }}</div>
+              <div class="r-item-meta">Size: {{ item.size|default:"N/A" }} &nbsp;|&nbsp; SL: {{ item.quantity }}</div>
+            </div>
+            <div class="r-item-price">{{ item.price|vnd }} đ</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="receipt-footer">
+      <div class="total-row">
+        <span class="total-label">Tổng thanh toán:</span>
+        <span class="total-value">{{ order.total|vnd }} đ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-buttons mb-3">
+    <a href="{% url 'orders:track' order.id %}" class="btn btn-dark"><i class="fa-solid fa-location-crosshairs me-2"></i>Theo dõi đơn</a>
+    <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary"><i class="fa-solid fa-bag-shopping me-2"></i>Tiếp tục mua sắm</a>
+    
+    {% if not order.is_paid %}
+      {% if order.status == "PLACED" or order.status == "CONFIRMED" %}
+        <form method="post" action="{% url 'orders:order_cancel' order.id %}" class="m-0" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng #{{ order.id }}?');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger h-100"><i class="fa-solid fa-ban me-2"></i>Hủy đơn</button>
+        </form>
+      {% endif %}
+    {% endif %}
+  </div>
+  
+  {% if order.is_paid %}
+    <p class="text-center text-muted small mt-3 mb-0"><i class="fa-solid fa-circle-info me-1"></i> Đơn đã thanh toán — để đổi/hủy vui lòng liên hệ tổng đài CSKH.</p>
+  {% endif %}
+</div>
+{% endblock %}

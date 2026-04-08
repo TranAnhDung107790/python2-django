@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Thanh toán MOMO | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="momo-card p-4 p-md-5 rounded-4 mx-auto" style="max-width: 1200px; border: 1px solid rgba(185,137,88,0.18);">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+      <h1 class="h4 m-0">Thanh toán qua MOMO</h1>
+      <span class="badge text-bg-dark">Đơn #{{ order.id }}</span>
+    </div>
+
+    <div class="text-muted mb-3">
+      Tổng cần thanh toán: <span class="fw-bold text-danger">{{ order.total|vnd }} đ</span>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="momo-box h-100">
+          <div class="fw-semibold mb-2">Mã giao dịch</div>
+          <div class="momo-code">{{ request_id }}</div>
+          {% if trans_id %}
+            <div class="small text-muted mt-2">Mã MoMo: {{ trans_id }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if embedded_pay_url and not qr_data_uri %}
+      <div class="momo-box mt-3">
+        <div class="fw-semibold mb-2">Trang thanh toán nhúng</div>
+        <iframe
+          src="{{ embedded_pay_url }}"
+          title="Trang thanh toán MOMO"
+          style="width:100%;min-height:700px;border:0;border-radius:12px;background:#fff;"
+          loading="lazy"
+        ></iframe>
+      </div>
+    {% endif %}
+
+    <div class="d-flex flex-column flex-md-row align-items-center gap-3 mt-4">
+      <a href="{% url 'orders:success' order.id %}" class="btn rounded-pill fw-bold text-white px-4 d-flex align-items-center justify-content-center w-100 w-md-auto" style="height: 46px; background: linear-gradient(135deg, #1fa24f, #158a41); box-shadow: 0 4px 15px rgba(31, 162, 79, 0.3); border: 0; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s ease; white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(31, 162, 79, 0.45)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(31, 162, 79, 0.3)'">
+        <i class="fa-regular fa-circle-check me-2 fs-5"></i> Xác nhận
+      </a>
+
+      <form method="post" action="{% url 'orders:order_cancel' order.id %}" class="m-0 p-0 w-100 w-md-auto" style="height: 46px;" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+        {% csrf_token %}
+        <button type="submit" class="btn rounded-pill fw-bold px-4 d-flex align-items-center justify-content-center w-100 h-100 text-nowrap" style="background: #fff5f5; color: #d63384; border: 1px solid #fecce3; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s ease; box-sizing: border-box;" onmouseover="this.style.transform='translateY(-2px)'; this.style.background='#ffe3ee'; this.style.boxShadow='0 4px 15px rgba(214, 51, 132, 0.15)'" onmouseout="this.style.transform='none'; this.style.background='#fff5f5'; this.style.boxShadow='none'">
+          <i class="fa-regular fa-circle-xmark me-2 fs-5"></i> Hủy
+        </button>
+      </form>
+
+      <a href="{% url 'orders:my_orders' %}" class="btn rounded-pill fw-bold px-4 ms-md-auto d-flex align-items-center justify-content-center text-dark w-100 w-md-auto" style="height: 46px; background: #ffffff; border: 1px solid #e9ecef; box-shadow: 0 2px 6px rgba(0,0,0,0.02); font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s ease; box-sizing: border-box; white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.02)'">
+        Xem đơn hàng <i class="fa-solid fa-arrow-right ms-2 text-muted"></i>
+      </a>
+    </div>
+  </div>
+{% endblock %}

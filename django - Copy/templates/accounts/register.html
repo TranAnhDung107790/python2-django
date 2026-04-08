@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Đăng ký | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="ads-auth-card ads-surface">
+        <div class="ads-auth-card__head">
+          <p class="ads-auth-card__eyebrow">CREATE ACCOUNT</p>
+          <h1 class="h3 mb-2">Đăng ký</h1>
+          <p class="text-muted mb-0">Tạo tài khoản để lưu yêu thích, thanh toán nhanh hơn và theo dõi trạng thái đơn hàng.</p>
+        </div>
+        <form method="post" class="p-0">
+        {% csrf_token %}
+        <div class="mb-2">
+          <label class="form-label">Họ và tên</label>
+          <input class="form-control" name="full_name" />
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Email *</label>
+          <input class="form-control" type="email" name="email" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mật khẩu *</label>
+          <div class="input-group">
+            <input class="form-control border-end-0" type="password" name="password" id="passwordField" required />
+            <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassword('passwordField', 'toggleIcon1')" style="background-color: transparent; border-color: #dee2e6;">
+              <i class="fa-regular fa-eye-slash text-muted" id="toggleIcon1"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label">Xác nhận mật khẩu *</label>
+          <div class="input-group">
+            <input class="form-control border-end-0" type="password" name="confirm_password" id="confirmPasswordField" required />
+            <button class="btn btn-outline-secondary border-start-0" type="button" onclick="togglePassword('confirmPasswordField', 'toggleIcon2')" style="background-color: transparent; border-color: #dee2e6;">
+              <i class="fa-regular fa-eye-slash text-muted" id="toggleIcon2"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn btn-dark w-100 mb-3 py-2 fw-bold" type="submit">Tạo tài khoản</button>
+
+        <div class="text-center small text-muted">
+          Đã có tài khoản? <a href="{% url 'accounts:login' %}" class="text-decoration-none fw-bold text-dark ms-1">Đăng nhập</a>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      }
+    }
+  </script>
+{% endblock %}

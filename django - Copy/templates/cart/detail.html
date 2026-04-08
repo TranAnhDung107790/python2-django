@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Giỏ hàng | AD Sneaker{% endblock %}
+
+{% block content %}
+  <h1 class="h3 mb-3">Giỏ hàng</h1>
+
+  {% if cart.items.all %}
+    <div class="table-responsive ads-surface p-3">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th style="width:88px;">Ảnh</th>
+            <th>Sản phẩm</th>
+            <th>Size</th>
+            <th style="width:180px;">Số lượng</th>
+            <th>Giá</th>
+            <th>Tạm tính</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for it in cart.items.all %}
+            <tr>
+              <td>
+                {% with img=it.product.images.first %}
+                  {% if img %}
+                    <img src="{{ img.image.url }}" alt="" width="72" height="72" class="rounded border" style="object-fit:cover;" />
+                  {% else %}
+                    <div class="text-muted small border rounded d-flex align-items-center justify-content-center" style="width:72px;height:72px;">—</div>
+                  {% endif %}
+                {% endwith %}
+              </td>
+              <td class="fw-semibold">{{ it.product.name }}</td>
+              <td>
+                <form method="post" action="{% url 'cart:update_item' it.id %}" class="d-flex gap-2">
+                  {% csrf_token %}
+                  <select class="form-select form-select-sm" name="size">
+                    <option value="35" {% if it.size == "35" %}selected{% endif %}>35</option>
+                    <option value="36" {% if it.size == "36" %}selected{% endif %}>36</option>
+                    <option value="37" {% if it.size == "37" %}selected{% endif %}>37</option>
+                    <option value="38" {% if it.size == "38" %}selected{% endif %}>38</option>
+                    <option value="39" {% if it.size == "39" %}selected{% endif %}>39</option>
+                    <option value="40" {% if it.size == "40" %}selected{% endif %}>40</option>
+                    <option value="41" {% if it.size == "41" %}selected{% endif %}>41</option>
+                    <option value="42" {% if it.size == "42" %}selected{% endif %}>42</option>
+                    <option value="43" {% if it.size == "43" %}selected{% endif %}>43</option>
+                    <option value="44" {% if it.size == "44" %}selected{% endif %}>44</option>
+                    <option value="45" {% if it.size == "45" %}selected{% endif %}>45</option>
+                  </select>
+                  <button class="btn btn-outline-dark btn-sm" type="submit">Lưu</button>
+                </form>
+              </td>
+              <td>
+                <form method="post" action="{% url 'cart:update_item' it.id %}" class="d-flex gap-2">
+                  {% csrf_token %}
+                  <input class="form-control" type="number" name="quantity" min="1" value="{{ it.quantity }}" />
+                  <button class="btn btn-outline-dark" type="submit">OK</button>
+                </form>
+              </td>
+              <td class="text-danger fw-bold">{{ it.product.price|vnd }} đ</td>
+              <td>{{ it.subtotal|vnd }} đ</td>
+              <td>
+                <form method="post" action="{% url 'cart:remove_item' it.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-outline-danger" type="submit">Xóa</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row g-4 border-top pt-4 mt-2">
+      <div class="col-lg-7">
+        <div class="border-0 rounded-4 p-4 ads-surface position-relative" style="background: linear-gradient(145deg, #ffffff 0%, #f9fafb 100%);">
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-ticket text-danger me-2 fs-5"></i>
+            <div class="fw-bold fs-5">Mã Giảm Giá / Voucher</div>
+          </div>
+          
+          <div class="voucher-list mb-4 d-flex flex-column gap-3">
+            {% for v in random_vouchers %}
+              {% if cart.total >= v.min_order %}
+                <div class="d-flex align-items-center border rounded-3 p-3 bg-white" style="border-color: #ffdce5 !important; position: relative;">
+                  <div style="position: absolute; left: -5px; width: 10px; height: 20px; background: #f9fafb; border-radius: 0 10px 10px 0; border: 1px solid #ffdce5; border-left: none;"></div>
+                  <div style="position: absolute; right: -5px; width: 10px; height: 20px; background: #f9fafb; border-radius: 10px 0 0 10px; border: 1px solid #ffdce5; border-right: none;"></div>
+                  <div class="flex-grow-1 border-end border-dotted pe-3">
+                    <div class="fw-bold text-danger mb-1">{{ v.code }}</div>
+                    {% if v.free_ship %}
+                      <div class="small fw-semibold">Miễn phí giao hàng</div>
+                    {% else %}
+                      <div class="small fw-semibold">Giảm {{ v.discount|vnd }} đ</div>
+                    {% endif %}
+                    <div class="text-muted" style="font-size: 0.8rem;">Cho đơn từ {{ v.min_order|vnd }} đ</div>
+                  </div>
+                  <div class="ps-3 text-center" style="min-width: 100px;">
+                    <form method="post" action="{% url 'cart:apply_voucher' %}" class="m-0">
+                      {% csrf_token %}
+                      <input type="hidden" name="code" value="{{ v.code }}">
+                      <button type="submit" class="btn btn-sm btn-dark w-100 rounded-pill">Sử dụng</button>
+                    </form>
+                  </div>
+                </div>
+              {% else %}
+                <div class="d-flex align-items-center border rounded-3 p-3 bg-white opacity-50" style="position: relative;">
+                  <div style="position: absolute; left: -5px; width: 10px; height: 20px; background: #f9fafb; border-radius: 0 10px 10px 0; border: 1px solid #dee2e6; border-left: none;"></div>
+                  <div style="position: absolute; right: -5px; width: 10px; height: 20px; background: #f9fafb; border-radius: 10px 0 0 10px; border: 1px solid #dee2e6; border-right: none;"></div>
+                  <div class="flex-grow-1 border-end border-dotted pe-3">
+                    <div class="fw-bold mb-1">{{ v.code }}</div>
+                    {% if v.free_ship %}
+                      <div class="small fw-semibold">Miễn phí giao hàng</div>
+                    {% else %}
+                      <div class="small fw-semibold">Giảm {{ v.discount|vnd }} đ</div>
+                    {% endif %}
+                    <div class="text-muted" style="font-size: 0.8rem;">Cho đơn từ {{ v.min_order|vnd }} đ</div>
+                  </div>
+                  <div class="ps-3 text-center" style="min-width: 100px;">
+                    <div class="small text-danger">Chưa đủ ĐK</div>
+                  </div>
+                </div>
+              {% endif %}
+            {% empty %}
+              <div class="text-muted small">Hiện chưa có mã giảm giá nào phù hợp.</div>
+            {% endfor %}
+          </div>
+
+          <form class="d-flex gap-2" method="post" action="{% url 'cart:apply_voucher' %}">
+            {% csrf_token %}
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-tag text-muted"></i></span>
+              <input class="form-control border-start-0 ps-0" name="code" value="{{ voucher_code|default_if_none:'' }}" placeholder="Hoặc nhập mã khác..." style="box-shadow: none;" />
+              <button class="btn btn-dark px-4" type="submit">Áp dụng</button>
+            </div>
+          </form>
+          
+          {% if voucher %}
+            <div class="d-flex align-items-center justify-content-between p-3 mt-3 border border-success rounded-3" style="background:#f0fdf4;">
+              <div class="d-flex align-items-center">
+                <i class="fa-solid fa-circle-check text-success fs-4 me-3"></i>
+                <div>
+                  <div class="fw-bold text-success">Đã áp dụng mã: {{ voucher.code }}</div>
+                  <div class="text-success small">
+                    {% if voucher.free_ship %}
+                      Miễn phí vận chuyển (Giảm {{ SHIPPING_FEE_DEFAULT|vnd }} đ)
+                    {% else %}
+                      Được giảm {{ voucher.discount|vnd }} đ
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <form method="post" action="{% url 'cart:remove_voucher' %}" class="m-0">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger" type="submit" title="Gỡ mã"><i class="fa-solid fa-xmark"></i> Bỏ mã</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="border-0 rounded-4 p-4 ads-surface h-100" style="background: linear-gradient(135deg, #111 0%, #222 100%); color: #fff;">
+          <h2 class="fs-5 mb-4 fw-bold text-white">Tổng đơn hàng</h2>
+          <div class="d-flex justify-content-between mb-3 text-white-50">
+            <span>Tạm tính</span>
+            <span class="fw-medium text-white">{{ cart.total|vnd }} đ</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3 text-white-50">
+            <span>Phí vận chuyển</span>
+            <span class="fw-medium text-white">{% if shipping_fee %}{{ shipping_fee|vnd }} đ{% else %}Miễn phí{% endif %}</span>
+          </div>
+          {% if discount %}
+            <div class="d-flex justify-content-between mb-3" style="color: #ffc107;">
+              <span>Voucher giảm giá</span>
+              <span class="fw-bold">-{{ discount|vnd }} đ</span>
+            </div>
+          {% endif %}
+          
+          <hr class="border-white opacity-25 my-4" />
+          
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <span class="text-white-50">Tổng cộng</span>
+            <span class="text-warning fs-3 fw-bold">{{ grand_total|vnd }} đ</span>
+          </div>
+          
+          <div class="d-grid">
+            <a class="btn btn-light btn-lg fw-bold rounded-pill" style="height: 54px; display: flex; align-items: center; justify-content: center;" href="{% url 'cart:checkout' %}">Tiến hành thanh toán <i class="fa-solid fa-arrow-right ms-2"></i></a>
+          </div>
+          <div class="text-center mt-3 text-white-50" style="font-size: 0.8rem;">
+            <i class="fa-solid fa-shield-halved me-1"></i> Thanh toán an toàn & bảo mật
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="card border-0 shadow-sm mt-4 mb-5">
+      <div class="card-body text-center py-5">
+        <div class="mb-4">
+          <i class="fas fa-shopping-cart" style="font-size: 4rem; color: #dee2e6;"></i>
+        </div>
+        <h4 class="text-muted mb-3">Giỏ hàng của bạn đang trống</h4>
+        <p class="text-secondary mb-4">Có vẻ như bạn chưa thêm sản phẩm nào vào giỏ hàng.</p>
+        <a href="{% url 'catalog:home' %}" class="btn btn-dark px-4 py-2 text-uppercase fw-bold" style="border-radius: 0;">
+          Tiếp tục mua sắm
+        </a>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

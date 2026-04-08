@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Theo dõi đơn hàng #{{ order.id }} | AD Sneaker{% endblock %}
+
+{% block content %}
+<style>
+  .track-modern-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 15px;
+    font-family: inherit;
+  }
+
+  .track-card {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    margin-bottom: 24px;
+    padding: 32px;
+  }
+
+  .track-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #f5f5f5;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .track-title h1 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #111;
+  }
+  
+  .track-subtitle {
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .track-price-tag {
+    text-align: right;
+  }
+  
+  .track-price-tag span {
+    display: block;
+    color: #888;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  
+  .track-price-tag strong {
+    font-size: 1.7rem;
+    color: #c61d22;
+    font-weight: 800;
+  }
+
+  /* Stepper / Timeline */
+  .stepper-wrapper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .stepper-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #f0f0f0;
+    z-index: 1;
+    border-radius: 2px;
+  }
+  
+  .stepper-progress {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    height: 4px;
+    background: #28a745;
+    z-index: 2;
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  .stepper-progress.canceled {
+    background: #dc3545;
+  }
+
+  .stepper-item {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    flex: 1;
+  }
+
+  .stepper-icon {
+    width: 52px;
+    height: 52px;
+    background: #fff;
+    border: 4px solid #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 1.2rem;
+    color: #ccc;
+    transition: all 0.3s;
+  }
+
+  .stepper-item.completed .stepper-icon {
+    border-color: #28a745;
+    background: #28a745;
+    color: #fff;
+  }
+  .stepper-item.active .stepper-icon {
+    border-color: #28a745;
+    color: #28a745;
+    background: #fff;
+  }
+  .stepper-item.canceled .stepper-icon {
+    border-color: #dc3545;
+    background: #dc3545;
+    color: #fff;
+  }
+
+  .stepper-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  .stepper-desc {
+    font-size: 0.8rem;
+    color: #888;
+  }
+  
+  .track-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 30px;
+  }
+
+  .info-box {
+    background: #fcfcfc;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #f0f0f0;
+  }
+  
+  .info-box h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .info-list li {
+    display: flex;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+  .info-list li:last-child { margin-bottom: 0; }
+  .info-list li span {
+    color: #666;
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .info-list li strong {
+    color: #111;
+    font-weight: 600;
+  }
+
+  .item-list-container {
+    margin-top: 40px;
+  }
+  
+  .item-list-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #111;
+  }
+  
+  .purchase-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .purchase-item:last-child {
+    border-bottom: none;
+  }
+  
+  .purchase-item img {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    margin-right: 16px;
+  }
+  
+  .purchase-details {
+    flex: 1;
+  }
+  
+  .purchase-name {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #111;
+    margin-bottom: 4px;
+  }
+  
+  .purchase-meta {
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  .purchase-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  @media (max-width: 768px) {
+    .track-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .track-price-tag { text-align: left; }
+    .track-card { padding: 24px; }
+    .track-info-grid { grid-template-columns: 1fr; }
+    .stepper-desc { display: none; }
+  }
+</style>
+
+<div class="track-modern-container">
+  
+  <!-- Back Button -->
+  <a href="{% url 'orders:my_orders' %}" class="btn btn-link text-decoration-none text-dark p-0 mb-4 fw-medium">
+    <i class="fa-solid fa-arrow-left me-2"></i> Quay lại Đơn hàng của tôi
+  </a>
+
+  <div class="track-card">
+    
+    <!-- Header -->
+    <div class="track-header">
+      <div class="track-title">
+        <h1>Mã Đơn: #{{ order.id }}</h1>
+        <div class="track-subtitle">
+          <i class="fa-regular fa-calendar-alt me-1"></i> Ngày đặt: {{ order.created_at|date:"d/m/Y H:i" }} &nbsp;|&nbsp; 
+          <span class="badge {% if order.is_paid %}bg-success{% else %}bg-warning text-dark{% endif %}">
+            {% if order.is_paid %}Đã thanh toán{% else %}Chưa thanh toán{% endif %}
+          </span>
+        </div>
+      </div>
+      <div class="track-price-tag">
+        <span>Tổng thanh toán</span>
+        <strong>{{ order.total|vnd }} đ</strong>
+      </div>
+    </div>
+
+    <!-- Timeline Stepper -->
+    <div class="stepper-wrapper">
+      {% if tracking.is_canceled %}
+        <div class="stepper-progress canceled" style="width: 100%;"></div>
+        <div class="stepper-item canceled">
+          <div class="stepper-icon"><i class="fa-solid fa-xmark"></i></div>
+          <div class="stepper-title">Đã huỷ đơn hàng</div>
+          <div class="stepper-desc">Đơn hàng đã được huỷ thành công</div>
+        </div>
+      {% else %}
+        <div class="stepper-progress" style="width: {{ tracking.progress_percent }}%;"></div>
+        {% for step in tracking.steps %}
+        <div class="stepper-item {{ step.state }}">
+          <div class="stepper-icon"><i class="{{ step.icon }}"></i></div>
+          <div class="stepper-title">{{ step.title }}</div>
+          <div class="stepper-desc">{{ step.description }}</div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <!-- Alert details if canceled -->
+    {% if tracking.is_canceled %}
+      <div class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="fa-solid fa-circle-exclamation fs-4 me-3"></i>
+        <div>
+          <h5 class="alert-heading mb-1 fw-bold">Thông báo huỷ đơn hàng</h5>
+          <p class="mb-0">Đơn hàng này đã bị hệ thống hoặc bạn yêu cầu huỷ. Rất mong được phục vụ bạn ở các đơn hàng sau!</p>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Info Blocks -->
+    <div class="track-info-grid">
+      <!-- Address Block -->
+      <div class="info-box">
+        <h4><i class="fa-solid fa-location-dot text-danger"></i> Thông tin nhận hàng</h4>
+        <ul class="info-list">
+          <li><span>Người nhận:</span> <strong>{{ order.full_name }}</strong></li>
+          <li><span>Số điện thoại:</span> <strong>{{ order.phone }}</strong></li>
+          <li><span>Khu vực:</span> <strong>{{ order.ward }}, {{ order.district }}, {{ order.province }}</strong></li>
+          <li><span>Địa chỉ nhà:</span> <strong>{{ order.address }}</strong></li>
+          {% if order.note %}
+            <li><span>Ghi chú:</span> <strong>{{ order.note }}</strong></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <!-- Payment & Package Info -->
+      <div class="info-box">
+        <h4><i class="fa-solid fa-wallet text-success"></i> Hình thức & Thanh toán</h4>
+        <ul class="info-list">
+          <li><span>Thanh toán:</span> <strong>{{ order.get_payment_method_display }}</strong></li>
+          <li><span>Trạng thái TT:</span> 
+            <strong>
+              {% if order.is_paid %}
+                <span class="text-success"><i class="fa-solid fa-check"></i> Đã hoàn tất</span>
+              {% else %}
+                <span class="text-warning"><i class="fa-solid fa-clock"></i> Chờ thanh toán</span>
+              {% endif %}
+            </strong>
+          </li>
+          <li><span>Trạng thái đơn:</span> 
+            <strong class="text-primary">{{ tracking.current_status }}</strong>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Product List Inside Track Order -->
+    <div class="item-list-container">
+      <div class="item-list-title">Sản phẩm trong kiện hàng</div>
+      {% for item in order.items.all %}
+        <div class="purchase-item">
+          {% if item.product.images.first %}
+            <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+          {% else %}
+            <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="width: 64px; height: 64px; border-radius: 8px; margin-right: 16px;">Ảnh</div>
+          {% endif %}
+          <div class="purchase-details">
+            <div class="purchase-name">{{ item.product.name }}</div>
+            <div class="purchase-meta">
+              Size: {{ item.size|default:"N/A" }} &nbsp;|&nbsp; Số lượng: {{ item.quantity }}
+            </div>
+          </div>
+          <div class="purchase-price">
+            {{ item.price|vnd }} ₫
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div> <!-- track-card -->
+
+</div>
+{% endblock %}

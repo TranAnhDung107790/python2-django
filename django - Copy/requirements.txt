@@ -1,0 +1,6 @@
+django==4.2.7
+pillow==12.1.1
+pymongo==4.6.0
+bcrypt==5.0.0
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2

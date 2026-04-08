@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}{{ product.name }} | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="row g-4 ads-detail-shell">
+    <div class="col-lg-6">
+      <div class="border rounded p-2 ads-surface ads-detail-gallery" id="img-zoom-container" style="overflow: hidden; cursor: zoom-in; position: relative;">
+        {% with img=product.images.first %}
+          {% if img %}
+            <img src="{{ img.image.url }}" alt="{{ product.name }}" class="img-fluid ads-detail-main-image" id="ads-detail-main-image" style="transition: transform 0.2s ease-out; width: 100%; object-fit: contain; pointer-events: none;" />
+          {% else %}
+            <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+          {% endif %}
+        {% endwith %}
+      </div>
+      <div class="d-flex gap-2 flex-wrap mt-3 ads-detail-thumbs">
+        {% for img in product.images.all %}
+          <button
+            type="button"
+            class="ads-detail-thumb {% if forloop.first %}is-active{% endif %}"
+            data-image="{{ img.image.url }}"
+            aria-label="Xem ảnh {{ forloop.counter }}"
+          >
+            <img src="{{ img.image.url }}" alt="" width="64" height="64" style="object-fit:cover" class="rounded border-0" />
+          </button>
+        {% endfor %}
+      </div>
+      <script>
+        // Image Zoom Logic
+        (function() {
+          const container = document.getElementById("img-zoom-container");
+          const img = document.getElementById("ads-detail-main-image");
+          if (!container || !img) return;
+
+          container.addEventListener("mousemove", (e) => {
+            const { left, top, width, height } = container.getBoundingClientRect();
+            const x = (e.clientX - left) / width;
+            const y = (e.clientY - top) / height;
+            
+            img.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+            img.style.transform = "scale(2)"; // Độ phóng to 2x (như Shopee/Lazada)
+          });
+
+          container.addEventListener("mouseleave", () => {
+            img.style.transformOrigin = "center center";
+            img.style.transform = "scale(1)";
+          });
+        })();
+
+        // Cart Bump Logic
+        function triggerCartBump(e) {
+          const cartIcon = document.getElementById("nav-cart-icon");
+          if (cartIcon) {
+            const iconEl = cartIcon.querySelector('i');
+            iconEl.classList.remove('cart-bump');
+            // Force reflow
+            void iconEl.offsetWidth;
+            iconEl.classList.add('cart-bump');
+          }
+        }
+      </script>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="ads-detail-panel">
+        <div class="ads-detail-copy">
+          <h1 class="h3 ads-detail-title">{{ product.name }}</h1>
+          <div class="h4 text-danger fw-bold mb-3 ads-detail-price">{{ product.price|vnd }} đ</div>
+
+          <div class="product-desc-wrap mb-3 ads-detail-desc">
+        {% if product_description_plain|length > 220 %}
+          <div id="desc-short" class="text-muted">{{ product_description_plain|truncatechars:220 }}</div>
+          <div id="desc-full" class="text-muted d-none">{{ product_description_html|safe }}</div>
+          <button type="button" class="btn btn-link p-0 mt-1" id="desc-toggle">Xem thêm</button>
+        {% else %}
+          <div class="text-muted">{{ product_description_html|safe }}</div>
+        {% endif %}
+          </div>
+        </div>
+      <script>
+        (function () {
+          var btn = document.getElementById("desc-toggle");
+          if (!btn) return;
+          var shortEl = document.getElementById("desc-short");
+          var fullEl = document.getElementById("desc-full");
+          var expanded = false;
+          btn.addEventListener("click", function () {
+            expanded = !expanded;
+            if (expanded) {
+              shortEl.classList.add("d-none");
+              fullEl.classList.remove("d-none");
+              btn.textContent = "Thu gọn";
+            } else {
+              shortEl.classList.remove("d-none");
+              fullEl.classList.add("d-none");
+              btn.textContent = "Xem thêm";
+            }
+          });
+        })();
+      </script>
+
+      {% if request.user.is_authenticated %}
+        <div class="d-flex gap-2 mb-3">
+          <form method="post" action="{% url 'catalog:wishlist_toggle' product.id %}">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger ads-detail-wishlist" type="submit">
+              {% if is_wishlisted %}♥ Đã yêu thích{% else %}♡ Yêu thích{% endif %}
+            </button>
+          </form>
+        </div>
+
+        <form method="post" action="{% url 'cart:add' product.id %}" class="border rounded p-3 ads-surface ads-detail-cartbox" onsubmit="triggerCartBump(event)">
+          {% csrf_token %}
+          <div class="row g-3 align-items-end">
+            <div class="col-6">
+              <label class="form-label ads-detail-label">Size</label>
+              <select class="form-select" name="size">
+                <option value="35">35</option>
+                <option value="36">36</option>
+                <option value="37">37</option>
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+                <option value="43">43</option>
+                <option value="44">44</option>
+                <option value="45">45</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label ads-detail-label">Số lượng</label>
+              <input class="form-control" type="number" name="quantity" value="1" min="1" />
+            </div>
+            <div class="col-12">
+              <button class="btn btn-dark w-100 ads-detail-cartbtn" type="submit">Thêm vào giỏ</button>
+            </div>
+          </div>
+        </form>
+      {% else %}
+        <div class="alert alert-warning">
+          Vui lòng <a href="{% url 'accounts:login' %}">đăng nhập</a> để mua hàng và lưu yêu thích.
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const mainImage = document.getElementById("ads-detail-main-image");
+      const thumbs = document.querySelectorAll(".ads-detail-thumb");
+      if (!mainImage || !thumbs.length) return;
+
+      thumbs.forEach((thumb) => {
+        thumb.addEventListener("click", function () {
+          const src = thumb.getAttribute("data-image");
+          if (!src) return;
+          mainImage.src = src;
+          thumbs.forEach((item) => item.classList.remove("is-active"));
+          thumb.classList.add("is-active");
+        });
+      });
+    })();
+  </script>
+
+  <!-- Product Reviews Section -->
+      <hr class="my-5 opacity-25" />
+      <div class="row">
+        <div class="col-md-12">
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between mb-4 gap-3">
+            <h2 class="h4 fw-bold mb-0">Đánh giá sản phẩm</h2>
+            <div class="d-flex align-items-center bg-light px-3 py-2 rounded-pill border">
+              <span class="fs-5 fw-bold me-2">4.8</span>
+              <div class="text-warning">
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+              </div>
+              <span class="text-muted ms-2 small">Theo 114 lượt đánh giá</span>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            {% for review in mock_reviews %}
+            <div class="col-md-4">
+              <div class="card h-100 border-0 shadow-sm" style="border-radius: 12px; background-color: #fff;">
+                <div class="card-body p-4">
+                  <div class="d-flex align-items-center mb-3 pb-2 border-bottom">
+                    <img src="https://ui-avatars.com/api/?name={{ review.name|urlencode }}&background={{ review.avatar_color }}&color=fff&size=45&font-size=0.4" class="rounded-circle me-3" alt="{{ review.name }}" style="border: 2px solid #f8f9fa;">
+                    <div>
+                      <div class="fw-bold mb-1" style="font-size: 0.95rem;">{{ review.name }}</div>
+                      <div class="d-flex align-items-center">
+                        <div class="text-warning" style="font-size: 0.8rem; letter-spacing: 1px;">
+                          {% if review.stars == 5 %}
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                          {% else %}
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ms-auto text-muted" style="font-size: 0.75rem;">{{ review.date }}</div>
+                  </div>
+                  <div class="d-flex align-items-center text-success mb-2" style="font-size: 0.8rem; font-weight: 500;">
+                    <i class="fa-solid fa-circle-check me-1"></i> <span class="opacity-75">Đã mua mẫu này</span>
+                  </div>
+                  <p class="text-dark mb-0" style="font-size: 0.9rem; line-height: 1.5;">{{ review.content }}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="text-center mt-5">
+            <button class="btn btn-outline-dark px-4 py-2 fw-medium" style="border-radius: 6px;" onclick="window.showAdsToast('warning', 'Bạn cần đăng nhập và từng mua hàng để có thể đánh giá!')">
+              <i class="fa-regular fa-pen-to-square me-2"></i>Viết đánh giá của bạn
+            </button>
+    </div>
+  </div>
+
+  <hr class="my-5" />
+  <h2 class="h4 mb-4">Có thể bạn sẽ thích</h2>
+  <div class="ads-product-rail">
+    {% for p in similar_products %}
+      <div class="ads-product-rail__item">
+        <div class="card h-100 ads-product-card">
+          {% with img=p.images.first %}
+            {% if img %}
+              <div class="ads-product-card__media">
+                <span class="ads-product-card__tag">Match</span>
+                <img class="card-img-top" src="{{ img.image.url }}" alt="{{ p.name }}" style="object-fit:cover;height:220px;" />
+              </div>
+            {% else %}
+              <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+            {% endif %}
+          {% endwith %}
+          <div class="card-body ads-product-card__body">
+            <div class="ads-product-card__name fw-semibold">{{ p.name }}</div>
+            <div class="ads-product-card__price text-danger fw-bold">{{ p.price|vnd }} đ</div>
+          </div>
+          <div class="card-footer bg-white border-0 pb-3 ads-product-card__footer">
+            <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' p.id p.slug %}">Xem</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="text-muted">Chưa có sản phẩm tương tự.</div>
+    {% endfor %}
+  </div>
+{% endblock %}

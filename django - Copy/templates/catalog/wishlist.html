@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Yêu thích | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3 ads-surface p-3">
+    <h1 class="h3 mb-0">Danh sách yêu thích</h1>
+    <div class="text-muted">Tổng: {{ items|length }}</div>
+  </div>
+
+  <div class="row g-3">
+    {% for it in items %}
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card h-100 ads-product-card">
+          {% with img=it.product.images.first %}
+            {% if img %}
+              <div class="ads-product-card__media">
+                <span class="ads-product-card__tag">Liked</span>
+                <img class="card-img-top" src="{{ img.image.url }}" alt="{{ it.product.name }}" style="object-fit:cover;height:220px;" />
+              </div>
+            {% else %}
+              <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+            {% endif %}
+          {% endwith %}
+          <div class="card-body ads-product-card__body">
+            <div class="ads-product-card__name fw-semibold">{{ it.product.name }}</div>
+            <div class="ads-product-card__price text-danger fw-bold">{{ it.product.price|vnd }} đ</div>
+          </div>
+          <div class="card-footer bg-white border-0 pb-3 d-flex gap-2 ads-product-card__footer">
+            <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' it.product.id it.product.slug %}">Xem</a>
+            <form method="post" action="{% url 'catalog:wishlist_toggle' it.product.id %}">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger" type="submit" title="Bỏ yêu thích">♥</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 w-100">
+        <div class="card border-0 shadow-sm mt-4 mb-5">
+          <div class="card-body text-center py-5">
+            <div class="mb-4">
+              <i class="fas fa-heart text-danger opacity-75" style="font-size: 4rem; text-shadow: 0 0 10px rgba(220, 53, 69, 0.4);"></i>
+            </div>
+            <h4 class="text-muted mb-3">Chưa có sản phẩm yêu thích</h4>
+            <p class="text-secondary mb-4">Bạn chưa thêm sản phẩm nào vào góc yêu thích của mình. Hãy khám phá và lưu lại những đôi giày bạn mong muốn nhé!</p>
+            <a href="{% url 'catalog:home' %}" class="btn btn-dark px-4 py-2 text-uppercase fw-bold" style="border-radius: 0;">
+              Tiếp tục mua sắm
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

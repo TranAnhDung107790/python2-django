@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Thanh toán | AD Sneaker{% endblock %}
+
+{% block content %}
+  <h1 class="h3 mb-3">Thanh toán</h1>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <form method="post" class="border rounded p-4 checkout-form ads-surface" onsubmit="const btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = '<i class=\'fa-solid fa-spinner fa-spin me-2\'></i>Đang xử lý...';">
+        {% csrf_token %}
+        <p class="fw-semibold mb-2">Thông tin giao hàng</p>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label">Họ và tên *</label>
+            <input class="form-control" name="full_name" value="{{ cart.full_name }}" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Số điện thoại *</label>
+            <input class="form-control" name="phone" value="{{ cart.phone }}" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Tỉnh / Thành phố *</label>
+            <input class="form-control" name="province" value="{{ cart.province }}" list="vn-provinces" placeholder="Chọn hoặc gõ" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Quận / Huyện *</label>
+            <input class="form-control" name="district" value="{{ cart.district }}" placeholder="VD: Hải Châu" required />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Phường / Xã *</label>
+            <input class="form-control" name="ward" value="{{ cart.ward }}" placeholder="VD: Thạc Gián" required />
+          </div>
+          <div class="col-12">
+            <label class="form-label">Địa chỉ (số nhà, tên đường) *</label>
+            <input class="form-control" name="address" value="{{ cart.address }}" required />
+          </div>
+          <div class="col-12">
+            <label class="form-label">Ghi chú đơn hàng</label>
+            <textarea class="form-control" name="note" rows="3" placeholder="Ghi chú..."></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Phương thức thanh toán</label>
+            <div class="d-grid gap-2 payment-methods">
+              <label class="border rounded p-3">
+                <input type="radio" name="payment_method" value="COD" checked />
+                Thanh Toán Khi Nhận Hàng (COD)
+              </label>
+              <label class="border rounded p-3">
+                <input type="radio" name="payment_method" value="MOMO" />
+                Thanh Toán Qua Momo
+              </label>
+              <label class="border rounded p-3">
+                <input type="radio" name="payment_method" value="VNPAY" />
+                Thanh Toán Qua VNPAY
+              </label>
+            </div>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-dark w-100" type="submit">Hoàn tất đơn hàng</button>
+          </div>
+        </div>
+      </form>
+      <datalist id="vn-provinces">
+        <option value="An Giang"><option value="Bà Rịa – Vũng Tàu"><option value="Bắc Giang"><option value="Bắc Ninh">
+        <option value="Đà Nẵng"><option value="Đắk Lắk"><option value="Đồng Nai"><option value="Hà Nội">
+        <option value="Hải Phòng"><option value="Huế"><option value="Khánh Hòa"><option value="Lâm Đồng">
+        <option value="Nghệ An"><option value="Ninh Bình"><option value="Quảng Nam"><option value="Quảng Ngãi">
+        <option value="Thanh Hóa"><option value="TP. Hồ Chí Minh"><option value="Vĩnh Long">
+      </datalist>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="border rounded p-3 checkout-summary ads-surface">
+        <div class="fw-bold mb-2">Tổng cộng | {{ cart.items.count }} sản phẩm</div>
+        <div class="d-flex justify-content-between"><span>Tạm tính</span><span class="fw-semibold">{{ cart.total|vnd }} đ</span></div>
+        <div class="d-flex justify-content-between"><span>Phí vận chuyển</span><span class="fw-semibold">{% if shipping_fee %}{{ shipping_fee|vnd }} đ{% else %}Miễn phí{% endif %}</span></div>
+        {% if discount %}
+          <div class="d-flex justify-content-between checkout-discount">
+            <span>Giảm giá (Voucher)</span><span>-{{ discount|vnd }} đ</span>
+          </div>
+        {% endif %}
+        {% if voucher and voucher.free_ship and not discount %}
+          <div class="d-flex justify-content-between text-success small">
+            <span>Voucher {{ voucher.code }}</span><span>Miễn phí ship</span>
+          </div>
+        {% endif %}
+        <hr />
+        <div class="d-flex justify-content-between">
+          <span class="fw-bold">Thanh toán</span>
+          <span class="text-danger fw-bold">{{ grand_total|vnd }} đ</span>
+        </div>
+        {% if voucher %}
+          <div class="text-muted small mt-2">Voucher: <strong>{{ voucher.code }}</strong></div>
+        {% endif %}
+        <div class="fw-semibold mt-3 mb-2 small text-uppercase text-muted">Sản phẩm</div>
+        <div class="checkout-items">
+          {% for it in cart.items.all %}
+            <div class="checkout-item d-flex gap-2 align-items-center">
+              {% with img=it.product.images.first %}
+                {% if img %}
+                  <img src="{{ img.image.url }}" alt="" width="56" height="56" class="rounded border object-fit-cover" />
+                {% else %}
+                  <div class="checkout-item__ph rounded border text-muted small d-flex align-items-center justify-content-center" style="width:56px;height:56px;">—</div>
+                {% endif %}
+              {% endwith %}
+              <div class="flex-grow-1 min-w-0">
+                <div class="fw-semibold text-truncate">{{ it.product.name }}</div>
+                <div class="small text-muted">Size {{ it.size|default:"—" }} × {{ it.quantity }}</div>
+              </div>
+              <div class="text-danger fw-bold small text-nowrap">{{ it.subtotal|vnd }} đ</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

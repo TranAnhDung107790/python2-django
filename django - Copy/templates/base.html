@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="AD Sneaker — Giày thể thao chính hãng, giao hàng tận nơi." />
+    <title>{% block title %}AD Sneaker{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👟</text></svg>" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,900;1,900&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    {% load static %}
+    <link href="{% static 'css/app.css' %}" rel="stylesheet" />
+    <!-- Custom CSS applied everywhere for navigation to make everything uniformly pill-shaped -->
+    <style>
+      /* Unify Header Containers */
+      .ads-nav, .ads-search, .ads-actions {
+        display: flex !important;
+        align-items: center !important;
+        height: 60px !important;
+        background: rgba(255,255,255,0.76) !important;
+        border: 1px solid rgba(185,137,88,0.18) !important;
+        border-radius: 999px !important;
+        padding: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+        margin: 0 !important;
+      }
+      
+      /* Navigation Links */
+      .ads-nav {
+        gap: 4px !important;
+      }
+      .ads-nav a {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        letter-spacing: 0.2px;
+        height: 44px !important;
+        padding: 0 20px !important;
+        border-radius: 999px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+      }
+      
+      /* Search Form */
+      .ads-search input {
+        height: 44px !important;
+        padding: 0 16px !important;
+        border-radius: 999px !important;
+        background: transparent !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-size: 15px !important;
+      }
+      .ads-search button {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        background: linear-gradient(180deg, #191919 0%, #0c0c0c 100%) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      
+      /* Action Buttons */
+      .ads-actions {
+        gap: 6px !important;
+      }
+      .ads-actions .ads-icon, .ads-actions .dropdown-toggle {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: linear-gradient(180deg, #fff 0%, #fdf7f0 100%) !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+      /* Remove dropdown arrow from our custom round toggle */
+      .ads-actions .dropdown-toggle::after {
+        display: none !important;
+      }
+      .ads-header__inner {
+        gap: 16px !important;
+      }
+      
+      /* Dropdown Menu Styling */
+      .ads-actions .dropdown-menu {
+        border: 1px solid rgba(185,137,88,0.18) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+        padding: 12px !important;
+        min-width: 230px !important;
+        margin-top: 12px !important;
+      }
+      .ads-actions .dropdown-item {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 14.5px !important;
+        padding: 10px 16px !important;
+        border-radius: 12px !important;
+        transition: all 0.2s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        color: #111 !important;
+      }
+      .ads-actions .dropdown-item i {
+        font-size: 16px !important;
+        color: #888 !important;
+        transition: all 0.2s ease !important;
+        width: 20px;
+        text-align: center;
+      }
+      .ads-actions .dropdown-item:hover {
+        background: #fdf6ef !important;
+        color: #dc3545 !important;
+        transform: translateX(4px) !important;
+      }
+      .ads-actions .dropdown-item:hover i {
+        color: #dc3545 !important;
+      }
+      .ads-actions .dropdown-divider {
+        margin: 8px 0 !important;
+        border-top: 1px dashed rgba(185,137,88,0.2) !important;
+      }
+      .ads-actions .dropdown-item.text-danger i {
+        color: #dc3545 !important;
+      }
+      .ads-actions .dropdown-item.text-danger:hover {
+        background: #fff5f5 !important;
+      }
+
+      /* Cart Bump Animation */
+      @keyframes cartBump {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3) translateY(-3px); color: #dc3545; }
+        100% { transform: scale(1); }
+      }
+      .cart-bump {
+        animation: cartBump 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    {% if messages %}
+      <div id="ads-flash-msgs" hidden>
+        {% for message in messages %}
+          <div data-level="{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+      <header class="ads-header">
+      <div class="container ads-header__inner">
+        <a class="ads-logo" href="{% url 'catalog:home' %}" style="gap: 8px; text-decoration: none; background: none; border: none; box-shadow: none;">
+          <!-- SVG Gen-Z Sneaker Icon -->
+          <svg width="42" height="32" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: skewX(-15deg); filter: drop-shadow(3px 4px 6px rgba(220, 53, 69, 0.4));">
+            <path d="M10 60 Q 40 60 70 20 L 95 10 Q 60 40 20 60 Z" fill="#111"/>
+            <path d="M15 65 Q 45 65 75 25 L 100 15 Q 65 45 25 65 Z" fill="#dc3545"/>
+          </svg>
+          <div style="display: flex; flex-direction: column; justify-content: center;">
+            <span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 26px; font-style: italic; letter-spacing: -1.5px; line-height: 0.9; text-transform: uppercase;">
+              <span style="color: #111;">AD</span><span style="color: #dc3545;">Sneaker</span>
+            </span>
+            <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 8px; letter-spacing: 3.5px; color: #6c757d; text-transform: uppercase; margin-top: 3px; padding-left: 2px;">
+              Originals
+            </span>
+          </div>
+        </a>
+
+        <nav class="ads-nav">
+          <a href="{% url 'catalog:category' %}">Tất Cả Sản Phẩm</a>
+          <a href="{% url 'catalog:category_slug' 'giay-nam' %}">Giày Nam</a>
+          <a href="{% url 'catalog:category_slug' 'giay-nu' %}">Giày Nữ</a>
+          <a href="{% url 'catalog:category_slug' 'giay-tre-em' %}">Giày Trẻ Em</a>
+        </nav>
+
+        <form
+          class="ads-search"
+          method="get"
+          action="{% url 'catalog:category' %}"
+          data-suggest-url="{% url 'api:products' %}"
+        >
+          <input
+            name="q"
+            value="{{ request.GET.q }}"
+            placeholder="Tìm Kiếm Sản Phẩm..."
+            autocomplete="off"
+            aria-label="Tìm kiếm sản phẩm"
+          />
+          <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <div class="ads-search__suggestions" hidden></div>
+        </form>
+
+        <div class="ads-actions">
+          {% if request.user.is_authenticated %}
+            <a class="ads-icon ads-icon--cart" href="{% url 'cart:detail' %}" title="Giỏ hàng" id="nav-cart-icon">
+              <i class="fa-solid fa-cart-shopping"></i>
+              {% if cart_item_count %}
+                <span class="ads-cart-badge">{{ cart_item_count }}</span>
+              {% endif %}
+            </a>
+            <a class="ads-icon" href="{% url 'catalog:wishlist' %}" title="Yêu thích"><i class="fa-solid fa-heart"></i></a>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fa-regular fa-user"></i> Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item" href="{% url 'orders:my_orders' %}"><i class="fa-solid fa-box-open"></i> Đơn hàng của tôi</a></li>
+                {% if request.user.is_staff %}
+                  <li><a class="dropdown-item text-danger" href="/admin/"><i class="fa-solid fa-shield-halved"></i> Trang quản trị</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a></li>
+              </ul>
+            </div>
+          {% else %}
+            <div class="ads-auth-btns">
+              <a class="ads-login ads-login--ghost" href="{% url 'accounts:register' %}">Đăng ký</a>
+              <a class="ads-login" href="{% url 'accounts:login' %}">Đăng nhập</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <main class="container py-4">{% block content %}{% endblock %}</main>
+
+    <div id="ads-toast-root" class="ads-toast-root" aria-live="polite"></div>
+
+    <footer class="ads-footer mt-5 pt-5 pb-4" style="background: linear-gradient(180deg, #111 0%, #000 100%);">
+      <div class="container">
+        <div class="row g-4 mb-4">
+          <!-- Col 1 -->
+          <div class="col-lg-4 col-md-6">
+            <div class="d-flex align-items-center mb-3">
+              <svg width="32" height="24" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="transform: skewX(-15deg); filter: drop-shadow(2px 2px 4px rgba(220, 53, 69, 0.5)); margin-right: 12px;">
+                <path d="M10 60 Q 40 60 70 20 L 95 10 Q 60 40 20 60 Z" fill="#fff"/>
+                <path d="M15 65 Q 45 65 75 25 L 100 15 Q 65 45 25 65 Z" fill="#dc3545"/>
+              </svg>
+              <div class="fs-4 fw-black fst-italic text-uppercase" style="letter-spacing: -1px; font-family: 'Montserrat', sans-serif;">
+                <span class="text-white">AD</span><span class="text-danger">Sneaker</span>
+              </div>
+            </div>
+            <p class="text-white-50 pe-lg-4" style="font-size: 0.95rem; line-height: 1.6;">Khơi nguồn đam mê, bước đi khác biệt. AD Sneaker tự hào mang đến những đôi giày thời thượng, chất lượng chính hãng và dịch vụ mua sắm tận tâm nhất.</p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <span class="badge bg-dark border border-secondary border-opacity-25 px-3 py-2 fw-normal d-flex align-items-center"><i class="fa-solid fa-shield-halved text-success me-2"></i> Chính hãng 100%</span>
+              <span class="badge bg-dark border border-secondary border-opacity-25 px-3 py-2 fw-normal d-flex align-items-center"><i class="fa-solid fa-arrow-right-arrow-left text-warning me-2"></i> Đổi trả 15 ngày</span>
+              <span class="badge bg-dark border border-secondary border-opacity-25 px-3 py-2 fw-normal d-flex align-items-center"><i class="fa-solid fa-headset text-info me-2"></i> Hỗ trợ 24/7</span>
+            </div>
+          </div>
+          
+          <!-- Col 2 -->
+          <div class="col-lg-2 col-md-6 offset-lg-1">
+            <h5 class="text-white fw-bold mb-4 fs-6 text-uppercase" style="letter-spacing: 1px;">Khám Phá</h5>
+            <ul class="list-unstyled d-flex flex-column gap-3 mb-0" style="font-size: 0.95rem;">
+              <li><a href="{% url 'catalog:category' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Tất Cả Sản Phẩm</a></li>
+              <li><a href="{% url 'catalog:category_slug' 'giay-nam' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Giày Nam</a></li>
+              <li><a href="{% url 'catalog:category_slug' 'giay-nu' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Giày Nữ</a></li>
+              <li><a href="{% url 'catalog:category_slug' 'giay-tre-em' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Giày Trẻ Em</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3 -->
+          <div class="col-lg-2 col-md-6">
+            <h5 class="text-white fw-bold mb-4 fs-6 text-uppercase" style="letter-spacing: 1px;">Hỗ Trợ</h5>
+            <ul class="list-unstyled d-flex flex-column gap-3 mb-0" style="font-size: 0.95rem;">
+              <li><a href="{% url 'catalog:site_page' 'chinh-sach-thanh-toan' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Thanh toán</a></li>
+              <li><a href="{% url 'catalog:site_page' 'chinh-sach-van-chuyen' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Vận chuyển</a></li>
+              <li><a href="{% url 'catalog:site_page' 'chinh-sach-doi-tra' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Đổi trả</a></li>
+              <li><a href="{% url 'catalog:site_page' 'chinh-sach-bao-hanh' %}" class="text-decoration-none text-white-50 ads-footer-link position-relative d-inline-block">Bảo hành</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 4 -->
+          <div class="col-lg-3 col-md-6">
+            <h5 class="text-white fw-bold mb-4 fs-6 text-uppercase" style="letter-spacing: 1px;">Liên Hệ</h5>
+            <ul class="list-unstyled d-flex flex-column gap-3 mb-0 text-white-50" style="font-size: 0.95rem;">
+              <li>
+                <a href="tel:0388724091" class="text-decoration-none text-white-50 ads-footer-link d-flex align-items-center">
+                  <div class="rounded-circle bg-white bg-opacity-10 d-flex justify-content-center align-items-center me-3" style="width: 36px; height: 36px;"><i class="fa-solid fa-phone text-white"></i></div>
+                  <span>0388 724 091</span>
+                </a>
+              </li>
+              <li class="d-flex align-items-center">
+                <a href="https://maps.google.com/?q=Hải+Châu,+Đà+Nẵng" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-white-50 ads-footer-link d-flex align-items-center">
+                  <div class="rounded-circle bg-white bg-opacity-10 d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width: 36px; height: 36px;"><i class="fa-solid fa-location-dot text-white"></i></div>
+                  <span>Hải Châu, Đà Nẵng</span>
+                </a>
+              </li>
+              <li class="mt-2">
+                <div class="d-flex gap-2">
+                  <a href="https://www.facebook.com/trdung06/" target="_blank" rel="noopener noreferrer" class="rounded-circle bg-white bg-opacity-10 d-flex justify-content-center align-items-center text-white ads-footer-icon text-decoration-none" style="width: 40px; height: 40px; transition: all 0.3s ease;"><i class="fa-brands fa-facebook-f"></i></a>
+                  <a href="https://www.instagram.com/adung.js" target="_blank" rel="noopener noreferrer" class="rounded-circle bg-white bg-opacity-10 d-flex justify-content-center align-items-center text-white ads-footer-icon text-decoration-none" style="width: 40px; height: 40px; transition: all 0.3s ease;"><i class="fa-brands fa-instagram"></i></a>
+                  <a href="https://www.tiktok.com/@www.anhdung.com" target="_blank" rel="noopener noreferrer" class="rounded-circle bg-white bg-opacity-10 d-flex justify-content-center align-items-center text-white ads-footer-icon text-decoration-none" style="width: 40px; height: 40px; transition: all 0.3s ease;"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Footer -->
+      <div class="border-top border-white border-opacity-10 mt-4 pt-4">
+        <div class="container">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-center text-white-50" style="font-size: 0.85rem;">
+            <div class="mb-3 mb-md-0">
+              © {% now "Y" %} <strong>AD Sneaker</strong>. Hệ thống cửa hàng giày thể thao uy tín.
+            </div>
+            <div class="d-flex align-items-center gap-3">
+              <span class="d-none d-md-inline">Chấp nhận thanh toán:</span>
+              <div class="d-flex gap-2 align-items-center bg-white px-2 py-1 rounded" style="opacity: 0.8;">
+                <i class="fa-brands fa-cc-visa text-primary fs-5" title="Visa"></i>
+                <i class="fa-brands fa-cc-mastercard text-danger fs-5" title="MasterCard"></i>
+                  <span class="fw-bold fst-italic ms-1" style="color: #a50064; letter-spacing: -0px; font-size: 15px;" title="MoMo Pay">MoMo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <style>
+      .ads-footer-link {
+        transition: color 0.3s ease, padding-left 0.3s ease;
+      }
+      .ads-footer-link:hover {
+        color: #fff !important;
+        padding-left: 6px;
+      }
+      .ads-footer-icon:hover {
+        background-color: #dc3545 !important;
+        transform: translateY(-3px);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true,
+        offset: 50
+      });
+    </script>
+    <script src="{% static 'js/toasts.js' %}?v=1.1"></script>
+    <script src="{% static 'js/header-search.js' %}"></script>
+    <script src="{% static 'js/scroll-reveal.js' %}"></script>
+  </body>
+</html>

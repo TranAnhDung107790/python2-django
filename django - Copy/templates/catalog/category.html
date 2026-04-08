@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Danh mục | AD Sneaker{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+      <h1 class="h3 mb-0 fw-bold">
+        {% if category_slug %}
+          {{ category_slug|title }}
+        {% else %}
+          Tất cả sản phẩm
+        {% endif %}
+      </h1>
+      
+      <!-- Advanced Filter Form -->
+      <form method="get" class="d-flex flex-column flex-sm-row gap-2 align-items-center bg-white p-2 rounded shadow-sm border">
+        <!-- Search Input -->
+        <div class="input-group input-group-sm" style="min-width: 200px;">
+          <span class="input-group-text bg-transparent border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+          <input class="form-control border-start-0 ps-0" name="q" value="{{ q }}" placeholder="Tìm tên giày..." />
+        </div>
+        
+        <!-- Price Range Filter -->
+        <select class="form-select form-select-sm border-0 bg-light" name="price" style="min-width: 140px; cursor: pointer;">
+          <option value="">-- Mọi mức giá --</option>
+          <option value="under_1m" {% if request.GET.price == "under_1m" %}selected{% endif %}>Dưới 1 triệu</option>
+          <option value="1m_to_2m" {% if request.GET.price == "1m_to_2m" %}selected{% endif %}>Từ 1 - 2 triệu</option>
+          <option value="above_2m" {% if request.GET.price == "above_2m" %}selected{% endif %}>Trên 2 triệu</option>
+        </select>
+
+        <!-- Sorter -->
+        <select class="form-select form-select-sm border-0 bg-light" name="sort" style="min-width: 140px; cursor: pointer;">
+          <option value="newest" {% if sort == "newest" or not sort %}selected{% endif %}>Mới nhất</option>
+          <option value="asc" {% if sort == "asc" %}selected{% endif %}>Giá: Thấp → Cao</option>
+          <option value="desc" {% if sort == "desc" %}selected{% endif %}>Giá: Cao → Thấp</option>
+        </select>
+        
+        <!-- Submit Button -->
+        <button class="btn btn-dark btn-sm px-4 fw-bold rounded" type="submit" style="letter-spacing: 0.5px;">LỌC</button>
+    </form>
+  </div>
+
+  <div class="row g-3">
+    {% for p in page_obj.object_list %}
+      <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card h-100 ads-product-card">
+          {% with img=p.images.first %}
+            {% if img %}
+              <div class="ads-product-card__media">
+                <span class="ads-product-card__tag">Sneaker</span>
+                <img class="card-img-top" src="{{ img.image.url }}" alt="{{ p.name }}" style="object-fit:cover;height:220px;" />
+              </div>
+            {% else %}
+              <div class="text-muted p-5 text-center">Chưa có ảnh</div>
+            {% endif %}
+          {% endwith %}
+          <div class="card-body ads-product-card__body">
+            <div class="ads-product-card__name fw-semibold">{{ p.name }}</div>
+            <div class="ads-product-card__price text-danger fw-bold">{{ p.price|vnd }} đ</div>
+          </div>
+          <div class="card-footer bg-white border-0 pb-3 d-flex gap-2 ads-product-card__footer">
+            <a class="btn btn-outline-dark w-100" href="{% url 'catalog:product_detail' p.id p.slug %}">Xem</a>
+            {% if request.user.is_authenticated %}
+              <form method="post" action="{% url 'catalog:wishlist_toggle' p.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger" type="submit" title="Yêu thích">
+                  {% if p.id in wishlist_ids %}♥{% else %}♡{% endif %}
+                </button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="text-muted">Không có sản phẩm.</div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav class="mt-4">
+      <ul class="pagination">
+        {% for n in page_obj.paginator.page_range %}
+          <li class="page-item {% if page_obj.number == n %}active{% endif %}">
+            <a class="page-link" href="?q={{ q }}&sort={{ sort }}&page={{ n }}">{{ n }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endblock %}

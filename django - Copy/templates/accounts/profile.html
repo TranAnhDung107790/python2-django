@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load format_vnd %}
+{% block title %}Thông tin người dùng | AD Sneaker{% endblock %}
+
+{% block content %}
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="border rounded p-3">
+        <div class="d-flex align-items-center gap-3">
+          <img
+            src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+            alt=""
+            width="72"
+            height="72"
+            class="rounded-circle"
+            style="object-fit:cover"
+          />
+          <div>
+            <div class="fw-bold">{{ request.user.first_name|default:request.user.username }}</div>
+            <div class="text-muted small">{{ request.user.email|default:request.user.username }}</div>
+          </div>
+        </div>
+        <div class="mt-3 d-grid gap-2">
+          <a class="btn btn-outline-dark" href="{% url 'orders:my_orders' %}">Đơn hàng của tôi</a>
+          <a class="btn btn-danger" href="{% url 'accounts:logout' %}">Đăng xuất</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <h2 class="h4 mb-3">Hoạt Động Gần Đây</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered border-primary" style="min-width: 900px">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email Người Dùng</th>
+              <th>Tên Sản Phẩm</th>
+              <th>Size</th>
+              <th>Số Lượng</th>
+              <th>Tổng Tiền</th>
+              <th>Trạng Thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in orders %}
+              {% for it in o.items.all %}
+                <tr>
+                  {% if forloop.first %}
+                    <td rowspan="{{ o.items.count }}">#{{ o.id }}</td>
+                    <td rowspan="{{ o.items.count }}">{{ request.user.email|default:request.user.username }}</td>
+                  {% endif %}
+                  <td>{{ it.product.name }}</td>
+                  <td>{{ it.size|default:"-" }}</td>
+                  <td>{{ it.quantity }}</td>
+                  {% if forloop.first %}
+                    <td rowspan="{{ o.items.count }}">{{ o.total|vnd }} đ</td>
+                    <td rowspan="{{ o.items.count }}">{{ o.get_status_display }}</td>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+            {% empty %}
+              <tr><td colspan="7" class="text-muted">Chưa có giao dịch.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
